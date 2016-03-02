@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "karma start",
-    "test:watch": "karma start --auto-watch --no-single-run"
+    "test:watch": "karma start --auto-watch --no-single-run",
+    "travis": "eslint *.js && npm run test"
   },
   "repository": {
     "type": "git",
