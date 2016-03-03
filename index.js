@@ -1,7 +1,5 @@
 'use strict';
 
-'use strict';
-
 var domify = require('min-dom/lib/domify'),
     domClasses = require('min-dom/lib/classes'),
     domMatches = require('min-dom/lib/matches'),
@@ -324,8 +322,6 @@ ScrollTabs.prototype.scrollToTabNode = function(tabNode) {
       tabOffsetRight = tabOffsetLeft + tabWidth,
       containerWidth = tabsContainerNode.offsetWidth,
       containerScrollLeft = tabsContainerNode.scrollLeft;
-
-  console.log(tabOffsetRight, tabWidth, containerScrollLeft);
 
   if (containerScrollLeft > tabOffsetLeft) {
     // scroll to the left, if the tab is overflowing on the left side

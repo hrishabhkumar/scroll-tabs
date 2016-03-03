@@ -35,7 +35,7 @@ describe('scrollTabs', function() {
     });
 
     // then
-    expect(scroller).to.exists;
+    expect(scroller).to.exist;
   });
 
 

@@ -60,6 +60,12 @@ Every time tabs change and or the tab container resizes, update the scroller:
 scroller.update();
 ```
 
+## How to test
+
+```
+npm run test
+```
+
 ## License
 
 MIT
