@@ -115,14 +115,24 @@ inherits(ScrollTabs, EventEmitter);
  * @return {DOMElement} The created scroll button node
  */
 ScrollTabs.prototype._createButton = function(parentNode, options) {
-  var scrollButton = domify('<span class="scroll-tabs-button ' + options.className + '" ' +
-                                  'data-direction="' + options.direction + '">' +
-                              options.label +
-                            '</span>');
 
-  this.container.insertBefore(scrollButton, parentNode.childNodes[0]);
+  var className = options.className,
+      direction = options.direction;
 
-  return scrollButton;
+
+  var button = domQuery('.' + className, parentNode);
+
+  if (!button) {
+    button = domify('<span class="scroll-tabs-button ' + className + '">' +
+                                options.label +
+                              '</span>');
+
+    parentNode.insertBefore(button, parentNode.childNodes[0]);
+  }
+
+  domAttr(button, 'data-direction', direction);
+
+  return button;
 };
 
 /**
@@ -136,14 +146,14 @@ ScrollTabs.prototype._createButton = function(parentNode, options) {
 ScrollTabs.prototype._createScrollButtons = function(parentNode, options) {
 
   // Create a button that scrolls to the tab left to the currently active tab
-  this.scrollButtonLeft = this._createButton(parentNode, {
+  this._createButton(parentNode, {
     className: 'scroll-tabs-left',
     label: options.scrollSymbolLeft,
     direction: -1
   });
 
   // Create a button that scrolls to the tab right to the currently active tab
-  this.scrollButtonRight = this._createButton(parentNode, {
+  this._createButton(parentNode, {
     className: 'scroll-tabs-right',
     label: options.scrollSymbolRight,
     direction: 1
@@ -309,16 +319,20 @@ ScrollTabs.prototype.scrollToTabNode = function(tabNode) {
 
   var tabsContainerNode = tabNode.parentNode;
 
-  var offsetRight = tabNode.offsetLeft + tabNode.offsetWidth,
-      scrollLeft = tabsContainerNode.scrollLeft;
+  var tabWidth = tabNode.offsetWidth,
+      tabOffsetLeft = tabNode.offsetLeft,
+      tabOffsetRight = tabOffsetLeft + tabWidth,
+      containerWidth = tabsContainerNode.offsetWidth,
+      containerScrollLeft = tabsContainerNode.scrollLeft;
 
-  if (scrollLeft > tabNode.offsetLeft) {
+  console.log(tabOffsetRight, tabWidth, containerScrollLeft);
+
+  if (containerScrollLeft > tabOffsetLeft) {
     // scroll to the left, if the tab is overflowing on the left side
     tabsContainerNode.scrollLeft = 0;
-  } else if (offsetRight > tabsContainerNode.offsetWidth) {
+  } else if (tabOffsetRight > containerWidth) {
     // scroll to the right, if the tab is overflowing on the right side
-    var delta = offsetRight - tabsContainerNode.offsetWidth;
-    tabsContainerNode.scrollLeft = delta;
+    tabsContainerNode.scrollLeft = tabOffsetRight - containerWidth;
   }
 };
 
@@ -334,11 +348,10 @@ ScrollTabs.prototype.update = function() {
   // check if tabs fit in container
   var overflow = tabsContainerNode.scrollWidth > tabsContainerNode.offsetWidth;
 
-  var hiddenClass = 'scroll-tabs-button-hidden';
+  // TODO(nikku): distinguish overflow left / overflow right?
+  var overflowClass = 'scroll-tabs-overflow';
 
-  // toggle tab button visibility
-  domClasses(this.scrollButtonLeft).toggle(hiddenClass, !overflow);
-  domClasses(this.scrollButtonRight).toggle(hiddenClass, !overflow);
+  domClasses(this.container).toggle(overflowClass, overflow);
 
   if (overflow) {
     // make sure the current active tab is always visible
