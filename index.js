@@ -8,8 +8,8 @@ var domify = require('min-dom/lib/domify'),
     domEvent = require('min-dom/lib/event'),
     domAttr = require('min-dom/lib/attr');
 
-var filter = require('lodash/collection/filter'),
-    assign = require('lodash/object/assign');
+var filter = require('lodash/filter'),
+    assign = require('lodash/assign');
 
 var inherits = require('inherits');
 
